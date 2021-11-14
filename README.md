@@ -18,9 +18,7 @@ kubectl create -f edge-device-plugin-daemonset.yaml
 
 ## Configure your pod:
 ```yaml
-spec:
-  containers:
-    resources:
-    limits:
-      coral.ai/tpu: 2 # requesting 2 TPUs
+resources:
+  limits:
+    coral.ai/tpu: 2 # requesting 2 TPUs
 ```
