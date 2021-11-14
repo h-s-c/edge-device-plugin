@@ -16,7 +16,7 @@
 kubectl create -f edge-device-plugin-daemonset.yaml
 ```
 
-## Configure your pod:
+## Configure your Pod:
 ```yaml
 resources:
   limits:
