@@ -11,6 +11,16 @@
 - Intel Movidius VPU (M.2, mPCIe)
 - Kneron KL520 (M.2, mPCIe)
 
+## Install DaemonSet:
 ```bash
 kubectl create -f edge-device-plugin-daemonset.yaml
+```
+
+## Configure your pod:
+```yaml
+spec:
+  containers:
+    resources:
+    limits:
+      coral.com/ai: 2 # requesting 2 TPUs
 ```
