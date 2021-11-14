@@ -22,5 +22,5 @@ spec:
   containers:
     resources:
     limits:
-      coral.com/ai: 2 # requesting 2 TPUs
+      coral.ai/tpu: 2 # requesting 2 TPUs
 ```
