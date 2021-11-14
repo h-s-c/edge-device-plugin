@@ -37,5 +37,6 @@ spec:
         - name: device-plugin
           hostPath:
             path: /var/lib/kubelet/device-plugins
-      nodeSelector:
-        feature.node.kubernetes.io/pci-1ac1_089a.present: "true"
+# Optional node-feature-discovery support
+#      nodeSelector:
+#        feature.node.kubernetes.io/pci-1ac1_089a.present: "true"
