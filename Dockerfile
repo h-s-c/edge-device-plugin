@@ -6,9 +6,9 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
-RUN go install -ldflags="-s -w"
+RUN go install -ldflags="-s -w" cmd/edge-device-plugin/main.go
 
 FROM debian:bullseye-slim
-COPY --from=build /go/bin/edge-device-plugin /bin/edge-device-plugin
+COPY --from=build /go/bin/main /bin/edge-device-plugin
 
 CMD ["/bin/edge-device-plugin"]
