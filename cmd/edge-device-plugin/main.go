@@ -47,11 +47,11 @@ func (dp *EdgeDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DeviceP
 }
 
 func (dp *EdgeDevicePlugin) Allocate(ctx context.Context, r *pluginapi.AllocateRequest) (*pluginapi.AllocateResponse, error) {
-	response := pluginapi.AllocateResponse{}
+	log.Println("Allocating devices")
 
+	responses := pluginapi.AllocateResponse{}
 	for _, req := range r.ContainerRequests {
-		car := pluginapi.ContainerAllocateResponse{}
-
+		response := pluginapi.ContainerAllocateResponse{}
 		for _, id := range req.DevicesIDs {
 			log.Println("Allocating device: ", id)
 			dev := &pluginapi.DeviceSpec{
@@ -59,13 +59,12 @@ func (dp *EdgeDevicePlugin) Allocate(ctx context.Context, r *pluginapi.AllocateR
 				ContainerPath: "/dev/" + id,
 				Permissions:   "rw",
 			}
-			car.Devices = append(car.Devices, dev)
+			response.Devices = append(response.Devices, dev)
 		}
-
-		response.ContainerResponses = append(response.ContainerResponses, &car)
+		responses.ContainerResponses = append(responses.ContainerResponses, &response)
 	}
 
-	return &response, nil
+	return &responses, nil
 }
 
 func (EdgeDevicePlugin) GetDevicePluginOptions(context.Context, *pluginapi.Empty) (*pluginapi.DevicePluginOptions, error) {
