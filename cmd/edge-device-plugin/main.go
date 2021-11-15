@@ -3,7 +3,10 @@ package main
 import (
 	"flag"
 	"log"
+	"os"
 	"path/filepath"
+	"strconv"
+	"time"
 
 	"github.com/kubevirt/device-plugin-manager/pkg/dpm"
 	"golang.org/x/net/context"
@@ -26,10 +29,26 @@ func FindDevices() []string {
 
 	devices := []string{}
 	for _, path := range matches {
-		log.Println("Found device: ", filepath.Base(path))
 		devices = append(devices, filepath.Base(path))
 	}
 	return devices
+}
+
+func CheckDeviceHealth(device string) string {
+	// Check TPU temperature
+	temp_b, _ := os.ReadFile("/sys/class/apex/" + device + "/temp")
+	trip_point0_temp_b, _ := os.ReadFile("/sys/class/apex/" + device + "/trip_point0_temp")
+
+	temp, _ := strconv.Atoi(string(temp_b))
+	trip_point0_temp, _ := strconv.Atoi(string(trip_point0_temp_b))
+
+	if temp >= trip_point0_temp {
+		log.Println("Device ", device, " is overheating (", (temp / 1000), "C)")
+		return pluginapi.Unhealthy
+	} else {
+		return pluginapi.Healthy
+	}
+
 }
 
 func (dp *EdgeDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePlugin_ListAndWatchServer) error {
@@ -38,12 +57,13 @@ func (dp *EdgeDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DeviceP
 		for _, path := range FindDevices() {
 			dev := &pluginapi.Device{
 				ID:     path,
-				Health: pluginapi.Healthy,
+				Health: CheckDeviceHealth(path),
 			}
 			devs = append(devs, dev)
 		}
-
 		s.Send(&pluginapi.ListAndWatchResponse{Devices: devs})
+
+		time.Sleep(5 * time.Second)
 	}
 	return nil
 }
