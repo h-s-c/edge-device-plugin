@@ -25,11 +25,9 @@ func FindDevices() []string {
 	}
 
 	devices := []string{}
-	if len(matches) > 0 {
-		for _, path := range matches {
-			log.Println("Found device: ", filepath.Base(path))
-			devices = append(devices, filepath.Base(path))
-		}
+	for _, path := range matches {
+		log.Println("Found device: ", filepath.Base(path))
+		devices = append(devices, filepath.Base(path))
 	}
 	return devices
 }
@@ -54,11 +52,11 @@ func (dp *EdgeDevicePlugin) Allocate(ctx context.Context, r *pluginapi.AllocateR
 	for _, req := range r.ContainerRequests {
 		car := pluginapi.ContainerAllocateResponse{}
 
-		for _, path := range req.DevicesIDs {
-			log.Println("Allocating device: ", path)
+		for _, id := range req.DevicesIDs {
+			log.Println("Allocating device: ", id)
 			dev := &pluginapi.DeviceSpec{
-				HostPath:      "/dev/" + path,
-				ContainerPath: "/dev/" + path,
+				HostPath:      "/dev/" + id,
+				ContainerPath: "/dev/" + id,
 				Permissions:   "rw",
 			}
 			car.Devices = append(car.Devices, dev)
