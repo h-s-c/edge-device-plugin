@@ -11,35 +11,41 @@ import (
 )
 
 type EdgeDevicePlugin struct {
-	name string
+	name    string
+	devices []string
 }
 
 func (dp *EdgeDevicePlugin) Start() error {
 	return nil
 }
 
-func (dp *EdgeDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePlugin_ListAndWatchServer) error {
-
-	devs := make([]*pluginapi.Device, 0)
-
-	err := filepath.Walk("/dev/", func(path string, info os.FileInfo, err error) error {
+func FindDevices(devices []string) filepath.WalkFunc {
+	return func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			log.Println(err)
 			return nil
 		}
-		if !info.IsDir() && filepath.Base(path)[0:3] == "apex" {
+		if !info.IsDir() && len(filepath.Base(path)) >= 4 && filepath.Base(path)[0:3] == "apex" {
 			log.Println("Found device: ", path)
-			dev := &pluginapi.Device{
-				ID:     path,
-				Health: pluginapi.Healthy,
-			}
-			devs = append(devs, dev)
+			devices = append(devices, filepath.Base(path))
 		}
 		return nil
-	})
+	}
+}
 
+func (dp *EdgeDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePlugin_ListAndWatchServer) error {
+	err := filepath.Walk("/dev/", FindDevices(dp.devices))
 	if err != nil {
 		log.Println(err)
+	}
+
+	devs := []*pluginapi.Device{}
+	for _, path := range dp.devices {
+		dev := &pluginapi.Device{
+			ID:     path,
+			Health: pluginapi.Healthy,
+		}
+		devs = append(devs, dev)
 	}
 
 	s.Send(&pluginapi.ListAndWatchResponse{Devices: devs})
@@ -47,16 +53,12 @@ func (dp *EdgeDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DeviceP
 }
 
 func (dp *EdgeDevicePlugin) Allocate(ctx context.Context, r *pluginapi.AllocateRequest) (*pluginapi.AllocateResponse, error) {
+	response := pluginapi.AllocateResponse{}
 
-	car := pluginapi.ContainerAllocateResponse{}
+	for _, req := range r.ContainerRequests {
+		car := pluginapi.ContainerAllocateResponse{}
 
-	err := filepath.Walk("/dev/", func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			log.Println(err)
-			return nil
-		}
-		if !info.IsDir() && filepath.Base(path)[0:3] == "apex" {
-			log.Println("Allocating device: ", path)
+		for _, path := range req.DevicesIDs {
 			dev := &pluginapi.DeviceSpec{
 				HostPath:      path,
 				ContainerPath: path,
@@ -64,19 +66,11 @@ func (dp *EdgeDevicePlugin) Allocate(ctx context.Context, r *pluginapi.AllocateR
 			}
 			car.Devices = append(car.Devices, dev)
 		}
-		return nil
-	})
 
-	if err != nil {
-		log.Println(err)
+		response.ContainerResponses = append(response.ContainerResponses, &car)
 	}
 
-	response := &pluginapi.AllocateResponse{
-		ContainerResponses: []*pluginapi.ContainerAllocateResponse{
-			&car,
-		},
-	}
-	return response, nil
+	return &response, nil
 }
 
 func (EdgeDevicePlugin) GetDevicePluginOptions(context.Context, *pluginapi.Empty) (*pluginapi.DevicePluginOptions, error) {
