@@ -39,14 +39,8 @@ func CheckDeviceHealth(device string) string {
 	temp_b, _ := os.ReadFile("/sys/class/apex/" + device + "/temp")
 	trip_point0_temp_b, _ := os.ReadFile("/sys/class/apex/" + device + "/trip_point0_temp")
 
-	// Debug
-	log.Println(temp_b)
-	log.Println(trip_point0_temp_b)
-	log.Println(string(temp_b))
-	log.Println(string(trip_point0_temp_b))
-
-	temp, _ := strconv.Atoi(string(temp_b))
-	trip_point0_temp, _ := strconv.Atoi(string(trip_point0_temp_b))
+	temp, _ := strconv.ParseInt(string(temp_b), 10, 64)
+	trip_point0_temp, _ := strconv.ParseInt(string(trip_point0_temp_b), 10, 64)
 
 	log.Println(temp)
 	log.Println(trip_point0_temp)
