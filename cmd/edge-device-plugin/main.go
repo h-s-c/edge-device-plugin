@@ -11,37 +11,32 @@ import (
 )
 
 type EdgeDevicePlugin struct {
-	name    string
-	devices []string
+	name string
 }
 
 func (dp *EdgeDevicePlugin) Start() error {
 	return nil
 }
 
-func FindDevices(devices []string) error {
-	matches, err := filepath.Glob("/dev/apex*")
-	if err != nil {
-		return err
-	}
-
-	if len(matches) > 0 {
-		for _, path := range matches {
-			log.Println("Found device: ", path)
-			devices = append(devices, filepath.Base(path))
-		}
-	}
-	return nil
-}
-
-func (dp *EdgeDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePlugin_ListAndWatchServer) error {
-	err := FindDevices(dp.devices)
+func FindDevices() []string {
+	matches, err := filepath.Glob("/sys/class/apex/apex*")
 	if err != nil {
 		log.Println(err)
 	}
 
+	devices := []string{}
+	if len(matches) > 0 {
+		for _, path := range matches {
+			log.Println("Found device: ", filepath.Base(path))
+			devices = append(devices, filepath.Base(path))
+		}
+	}
+	return devices
+}
+
+func (dp *EdgeDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePlugin_ListAndWatchServer) error {
 	devs := []*pluginapi.Device{}
-	for _, path := range dp.devices {
+	for _, path := range FindDevices() {
 		dev := &pluginapi.Device{
 			ID:     path,
 			Health: pluginapi.Healthy,
@@ -60,9 +55,10 @@ func (dp *EdgeDevicePlugin) Allocate(ctx context.Context, r *pluginapi.AllocateR
 		car := pluginapi.ContainerAllocateResponse{}
 
 		for _, path := range req.DevicesIDs {
+			log.Println("Allocating device: ", path)
 			dev := &pluginapi.DeviceSpec{
-				HostPath:      path,
-				ContainerPath: path,
+				HostPath:      "/dev/" + path,
+				ContainerPath: "/dev/" + path,
 				Permissions:   "rw",
 			}
 			car.Devices = append(car.Devices, dev)
