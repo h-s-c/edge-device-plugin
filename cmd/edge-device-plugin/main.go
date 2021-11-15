@@ -42,9 +42,6 @@ func CheckDeviceHealth(device string) string {
 	temp, _ := strconv.ParseInt(string(temp_b), 10, 64)
 	trip_point0_temp, _ := strconv.ParseInt(string(trip_point0_temp_b), 10, 64)
 
-	log.Println(temp)
-	log.Println(trip_point0_temp)
-
 	if temp >= trip_point0_temp {
 		log.Println("Device ", device, " is overheating (", (temp / 1000), "C)")
 		return pluginapi.Unhealthy
