@@ -33,22 +33,22 @@ func FindDevices() []string {
 }
 
 func (dp *EdgeDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePlugin_ListAndWatchServer) error {
-	devs := []*pluginapi.Device{}
-	for _, path := range FindDevices() {
-		dev := &pluginapi.Device{
-			ID:     path,
-			Health: pluginapi.Healthy,
+	for {
+		devs := []*pluginapi.Device{}
+		for _, path := range FindDevices() {
+			dev := &pluginapi.Device{
+				ID:     path,
+				Health: pluginapi.Healthy,
+			}
+			devs = append(devs, dev)
 		}
-		devs = append(devs, dev)
-	}
 
-	s.Send(&pluginapi.ListAndWatchResponse{Devices: devs})
+		s.Send(&pluginapi.ListAndWatchResponse{Devices: devs})
+	}
 	return nil
 }
 
 func (dp *EdgeDevicePlugin) Allocate(ctx context.Context, r *pluginapi.AllocateRequest) (*pluginapi.AllocateResponse, error) {
-	log.Println("Allocating devices")
-
 	responses := pluginapi.AllocateResponse{}
 	for _, req := range r.ContainerRequests {
 		response := pluginapi.ContainerAllocateResponse{}
