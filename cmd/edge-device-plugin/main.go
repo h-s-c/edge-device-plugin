@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/kubevirt/device-plugin-manager/pkg/dpm"
@@ -22,33 +23,45 @@ func (dp *EdgeDevicePlugin) Start() error {
 }
 
 func FindDevices() []string {
-	matches, err := filepath.Glob("/sys/class/apex/apex*")
-	if err != nil {
-		log.Println(err)
+	devices := []string{}
+	// M.2/mPCIe TPUs
+	pciedevices, _ := filepath.Glob("/sys/class/apex/apex*")
+	for _, path := range pciedevices {
+		devices = append(devices, "/dev/"+filepath.Base(path))
 	}
 
-	devices := []string{}
-	for _, path := range matches {
-		devices = append(devices, filepath.Base(path))
+	// USB TPUs
+	usbdevices, _ := filepath.Glob("/sys/bus/usb/devices/*/idVendor")
+	for _, path := range usbdevices {
+		vendorid, _ := os.ReadFile(path)
+		if strings.Contains(string(vendorid), "18d1") || strings.Contains(string(vendorid), "1a6e") {
+			productid, _ := os.ReadFile(filepath.Dir(path) + "/idProduct")
+			if strings.Contains(string(productid), "9302") || strings.Contains(string(productid), "089a") {
+				busnum, _ := os.ReadFile(filepath.Dir(path) + "/busnum")
+				devnum, _ := os.ReadFile(filepath.Dir(path) + "/devnum")
+				devices = append(devices, "/dev/bus/usb/"+string(busnum)+"/"+string(devnum))
+			}
+		}
 	}
+
 	return devices
 }
 
 func CheckDeviceHealth(device string) string {
-	// Check TPU temperature
-	temp_b, _ := os.ReadFile("/sys/class/apex/" + device + "/temp")
-	trip_point0_temp_b, _ := os.ReadFile("/sys/class/apex/" + device + "/trip_point0_temp")
+	// Check M.2/mPCIe TPU temperature
+	if strings.Contains(device, "usb") == false {
+		temp_b, _ := os.ReadFile("/sys/class/apex/" + filepath.Base(device) + "/temp")
+		trip_point0_temp_b, _ := os.ReadFile("/sys/class/apex/" + filepath.Base(device) + "/trip_point0_temp")
 
-	temp, _ := strconv.ParseInt(string(temp_b), 10, 64)
-	trip_point0_temp, _ := strconv.ParseInt(string(trip_point0_temp_b), 10, 64)
+		temp, _ := strconv.ParseInt(string(temp_b), 10, 64)
+		trip_point0_temp, _ := strconv.ParseInt(string(trip_point0_temp_b), 10, 64)
 
-	if temp >= trip_point0_temp {
-		log.Println("Device ", device, " is overheating (", (temp / 1000), "C)")
-		return pluginapi.Unhealthy
-	} else {
-		return pluginapi.Healthy
+		if temp >= trip_point0_temp {
+			log.Println("Device ", filepath.Base(device), " is overheating (", (temp / 1000), "C)")
+			return pluginapi.Unhealthy
+		}
 	}
-
+	return pluginapi.Healthy
 }
 
 func (dp *EdgeDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePlugin_ListAndWatchServer) error {
@@ -75,8 +88,8 @@ func (dp *EdgeDevicePlugin) Allocate(ctx context.Context, r *pluginapi.AllocateR
 		for _, id := range req.DevicesIDs {
 			log.Println("Allocating device: ", id)
 			dev := &pluginapi.DeviceSpec{
-				HostPath:      "/dev/" + id,
-				ContainerPath: "/dev/" + id,
+				HostPath:      id,
+				ContainerPath: id,
 				Permissions:   "rw",
 			}
 			response.Devices = append(response.Devices, dev)
