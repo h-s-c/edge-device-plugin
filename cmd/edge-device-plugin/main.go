@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"log"
-	"os"
 	"path/filepath"
 
 	"github.com/kubevirt/device-plugin-manager/pkg/dpm"
@@ -20,22 +19,23 @@ func (dp *EdgeDevicePlugin) Start() error {
 	return nil
 }
 
-func FindDevices(devices []string) filepath.WalkFunc {
-	return func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			log.Println(err)
-			return nil
-		}
-		if !info.IsDir() && len(filepath.Base(path)) >= 4 && filepath.Base(path)[0:3] == "apex" {
+func FindDevices(devices []string) error {
+	matches, err := filepath.Glob("/dev/apex*")
+	if err != nil {
+		return err
+	}
+
+	if len(matches) > 0 {
+		for _, path := range matches {
 			log.Println("Found device: ", path)
 			devices = append(devices, filepath.Base(path))
 		}
-		return nil
 	}
+	return nil
 }
 
 func (dp *EdgeDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePlugin_ListAndWatchServer) error {
-	err := filepath.Walk("/dev/", FindDevices(dp.devices))
+	err := FindDevices(dp.devices)
 	if err != nil {
 		log.Println(err)
 	}
