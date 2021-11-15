@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"os"
 	"path/filepath"
@@ -105,6 +106,8 @@ func (l Lister) NewPlugin(name string) dpm.PluginInterface {
 }
 
 func main() {
+	flag.Parse()
+	log.Println("Edge device plugin for Kubernetes")
 	l := Lister{}
 	manager := dpm.NewManager(&l)
 	manager.Run()
