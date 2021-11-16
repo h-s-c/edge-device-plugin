@@ -41,6 +41,7 @@ func FindVPUs() []string {
 			if strings.Contains(string(productid), "2485") || strings.Contains(string(productid), "f63b") {
 				// Only one NCS2 per host supported
 				devices = append(devices, "ncs2")
+				break
 			}
 		}
 	}
