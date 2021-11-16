@@ -2,9 +2,9 @@
 
 ### Supported devices
 - Coral Edge TPU (USB, M.2, mPCIe)
+- Intel Movidius VPU (Neural Compute Stick 2 \*)
 
-### Upcoming devices
-- Intel Movidius VPU (USB)
+\* only one NCS2 per host supported
 
 ### Send me some hardware
 - Intel Movidius VPU (M.2, mPCIe)
