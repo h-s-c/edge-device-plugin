@@ -2,10 +2,10 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
-	"strconv"
 	"strings"
 	"time"
 
@@ -51,18 +51,22 @@ func CheckDeviceHealth(device string) string {
 	// Check M.2/mPCIe TPU temperature
 	if strings.Contains(device, "usb") == false {
 		path := "/sys/class/apex/" + filepath.Base(device)
-		log.Println(path)
-
 		temp_b, _ := os.ReadFile(path + "/temp")
 		trip_point0_temp_b, _ := os.ReadFile(path + "/trip_point0_temp")
 
-		log.Println(temp_b)
-		log.Println(trip_point0_temp_b)
-		log.Println(string(temp_b))
-		log.Println(string(trip_point0_temp_b))
+		var temp int
+		_, err := fmt.Sscan(string(temp_b), &temp)
+		if err != nil {
+			log.Println(err)
+			return pluginapi.Unhealthy
+		}
 
-		temp, _ := strconv.ParseInt(string(temp_b), 10, 64)
-		trip_point0_temp, _ := strconv.ParseInt(string(trip_point0_temp_b), 10, 64)
+		var trip_point0_temp int
+		_, err2 := fmt.Sscan(string(trip_point0_temp_b), &trip_point0_temp)
+		if err2 != nil {
+			log.Println(err2)
+			return pluginapi.Unhealthy
+		}
 
 		if temp >= trip_point0_temp {
 			log.Println("Device ", filepath.Base(device), " is overheating (", (temp / 1000), "C)")
