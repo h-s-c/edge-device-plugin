@@ -43,7 +43,7 @@ func FindVPUs() []string {
 func (dp *VPUDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePlugin_ListAndWatchServer) error {
 	for {
 		devs := []*pluginapi.Device{}
-		for _, id := range FindTPUs() {
+		for _, id := range FindVPUs() {
 			dev := &pluginapi.Device{
 				ID:     id,
 				Health: pluginapi.Healthy,
