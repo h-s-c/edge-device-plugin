@@ -15,7 +15,6 @@ import (
 
 type TPUDevicePlugin struct {
 	name string
-	stop chan bool
 }
 
 func (dp *TPUDevicePlugin) Start() error {

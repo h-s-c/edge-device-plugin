@@ -14,7 +14,6 @@ import (
 
 type VPUDevicePlugin struct {
 	name string
-	stop chan bool
 }
 
 func (dp *VPUDevicePlugin) Start() error {

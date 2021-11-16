@@ -12,7 +12,6 @@ import (
 
 type VCDevicePlugin struct {
 	name string
-	stop chan bool
 }
 
 func (dp *VCDevicePlugin) Start() error {
