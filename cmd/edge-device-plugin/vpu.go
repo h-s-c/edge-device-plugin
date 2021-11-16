@@ -18,15 +18,6 @@ type VPUDevicePlugin struct {
 }
 
 func (dp *VPUDevicePlugin) Start() error {
-	log.Println("VPU Start")
-	dp.stop = make(chan bool)
-	dp.stop <- false
-	return nil
-}
-
-func (dp *VPUDevicePlugin) Stop() error {
-	log.Println("VPU Stop")
-	dp.stop <- true
 	return nil
 }
 
@@ -52,9 +43,6 @@ func FindVPUs() []string {
 func (dp *VPUDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePlugin_ListAndWatchServer) error {
 	for {
 		log.Println("VPU ListAndWatch")
-		if <-dp.stop {
-			break
-		}
 
 		devs := []*pluginapi.Device{}
 		for _, id := range FindTPUs() {

@@ -19,15 +19,6 @@ type TPUDevicePlugin struct {
 }
 
 func (dp *TPUDevicePlugin) Start() error {
-	log.Println("TPU Start")
-	dp.stop = make(chan bool)
-	dp.stop <- false
-	return nil
-}
-
-func (dp *TPUDevicePlugin) Stop() error {
-	log.Println("TPU Stop")
-	dp.stop <- true
 	return nil
 }
 
@@ -88,9 +79,6 @@ func CheckTPUHealth(device string) string {
 func (dp *TPUDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePlugin_ListAndWatchServer) error {
 	for {
 		log.Println("TPU ListAndWatch")
-		if <-dp.stop {
-			break
-		}
 
 		devs := []*pluginapi.Device{}
 		for _, path := range FindTPUs() {
