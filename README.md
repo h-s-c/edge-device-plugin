@@ -2,13 +2,13 @@
 
 ### Supported devices
 - Coral Edge TPU (USB\*, M.2, mPCIe)
-- Intel Movidius VPU (Neural Compute Stick 2\*)
+- Intel Movidius Myriad X VPU (Neural Compute Stick 2\*)
 
 \*only one USB accelerator per host supported
 
-### Pull request or hardware welcome
-- Intel Movidius VPU (M.2, mPCIe)
-- Kneron KL520 (M.2, mPCIe)
+### Send me some hardware
+- Intel Movidius Myriad X VPU (M.2, mPCIe)
+- Kneron KL520/KL720 (USB, M.2, mPCIe)
 
 ## Install DaemonSet
 ### Helm chart
