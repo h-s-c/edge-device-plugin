@@ -1,10 +1,9 @@
 # Kubernetes device plugin for low power edge computing accelerators
 
 ### Supported devices
-- Coral Edge TPU (M.2, mPCIe)
+- Coral Edge TPU (USB, M.2, mPCIe)
 
 ### Upcoming devices
-- Coral Edge TPU (USB)
 - Intel Movidius VPU (USB)
 
 ### Send me some hardware
@@ -18,7 +17,9 @@ kubectl create -f edge-device-plugin-daemonset.yaml
 
 ## Configure your Pod:
 ```yaml
-resources:
+resources: 
+  requests:
+    coral.ai/tpu: 1 # requesting 1 TPUs
   limits:
-    coral.ai/tpu: 2 # requesting 2 TPUs
+    coral.ai/tpu: 1 # requesting 1 TPUs
 ```
