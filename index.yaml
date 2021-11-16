@@ -3,6 +3,26 @@ entries:
   edge-device-plugin:
   - apiVersion: v2
     appVersion: 1.18.0
+    created: "2021-11-16T15:00:33.596508792Z"
+    description: A Helm chart for deploying Kubernetes Edge Device Plugin
+    digest: bffb7654c212e21a55f0bfa21f291bf4a3425480c01823c0f5befa04a40085eb
+    home: https://github.com/h-s-c/edge-device-plugin
+    keywords:
+    - kubernetes
+    - coral
+    - movidius
+    kubeVersion: '>= 1.18.0'
+    maintainers:
+    - name: Kevin Schmidt
+    name: edge-device-plugin
+    sources:
+    - https://github.com/h-s-c/edge-device-plugin
+    type: application
+    urls:
+    - https://github.com/h-s-c/edge-device-plugin/releases/download/edge-device-plugin-0.1.5/edge-device-plugin-0.1.5.tgz
+    version: 0.1.5
+  - apiVersion: v2
+    appVersion: 1.18.0
     created: "2021-11-16T14:38:12.372411518Z"
     description: A Helm chart for deploying Kubernetes Edge Device Plugin
     digest: bbcc4f3e07979f800425239f437729de027933d6bfee103d4aec3a7682891b3d
@@ -102,4 +122,4 @@ entries:
     urls:
     - https://github.com/h-s-c/edge-device-plugin/releases/download/edge-device-plugin-0.1.0/edge-device-plugin-0.1.0.tgz
     version: 0.1.0
-generated: "2021-11-16T14:38:12.372431718Z"
+generated: "2021-11-16T15:00:33.596529792Z"
