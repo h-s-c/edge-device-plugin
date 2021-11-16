@@ -1,0 +1,25 @@
+apiVersion: v1
+entries:
+  edge-device-plugin:
+  - apiVersion: v2
+    appVersion: 1.18.0
+    created: "2021-11-16T05:02:03.960069402Z"
+    description: A Helm chart for deploying Kubernetes Edge Device Plugin
+    digest: f5836dfa8a16832d0d5dd212d6e403399892512c9333a2fecd40d350ad736c49
+    home: https://github.com/h-s-c/edge-device-plugin
+    keywords:
+    - kubernetes
+    - cluster
+    - hardware
+    - gpu
+    kubeVersion: '>= 1.18.0'
+    maintainers:
+    - name: Kevin Schmidt
+    name: edge-device-plugin
+    sources:
+    - https://github.com/h-s-c/edge-device-plugin
+    type: application
+    urls:
+    - https://github.com/h-s-c/edge-device-plugin/releases/download/edge-device-plugin-0.1.0/edge-device-plugin-0.1.0.tgz
+    version: 0.1.0
+generated: "2021-11-16T05:02:03.960074902Z"
