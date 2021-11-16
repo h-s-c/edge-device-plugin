@@ -103,6 +103,7 @@ func (dp *TPUDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePl
 		s.Send(&pluginapi.ListAndWatchResponse{Devices: devs})
 
 		time.Sleep(5 * time.Second)
+		log.Println("Loop 1")
 	}
 	finished <- true
 	return nil
@@ -209,6 +210,7 @@ func (dp *VPUDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePl
 		s.Send(&pluginapi.ListAndWatchResponse{Devices: devs})
 
 		time.Sleep(5 * time.Second)
+		log.Println("Loop 2")
 	}
 	finished <- true
 	return nil
@@ -269,7 +271,7 @@ func (l VPULister) NewPlugin(name string) dpm.PluginInterface {
 func main() {
 	flag.Parse()
 
-	log.Println("Edge device plugin for Kubernetes")
+	log.Println("Starting Edge device plugin for Kubernetes")
 
 	finished = make(chan bool)
 	tpumanager := dpm.NewManager(TPULister{})
@@ -277,4 +279,5 @@ func main() {
 	vpumanager := dpm.NewManager(VPULister{})
 	go vpumanager.Run()
 	<-finished
+	log.Println("Exiting Edge device plugin for Kubernetes")
 }
