@@ -26,5 +26,11 @@ func main() {
 		vpumanager := dpm.NewManager(VPULister{})
 		vpumanager.Run()
 	}()
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		vcmanager := dpm.NewManager(VCLister{})
+		vcmanager.Run()
+	}()
 	wg.Wait()
 }

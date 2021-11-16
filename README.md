@@ -3,8 +3,10 @@
 ### Supported devices
 - Coral Edge TPU (USB\*, M.2, mPCIe)
 - Intel Movidius Myriad X VPU (Neural Compute Stick 2\*)
+- Broadcom VideoCore (Raspberry Pi 3/4\*\*)
 
 \*only one USB accelerator per host supported
+\*\*hardware accelerated video encoding/decoding via /dev/vchiq
 
 ### Send me some hardware
 - Intel Movidius Myriad X VPU (M.2, mPCIe)
@@ -36,4 +38,11 @@ resources:
     intel.com/vpu: 1 # requesting 1 VPU
   limits:
     intel.com/vpu: 1 # requesting 1 VPU
+```
+```yaml
+resources: 
+  requests:
+    broadcom.com/vc: 1 # requesting 1 VC
+  limits:
+    broadcom.com/vc: 1 # requesting 1 VC
 ```
