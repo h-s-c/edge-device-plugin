@@ -10,9 +10,8 @@ maintainers:
   - name: Kevin Schmidt
 keywords:
   - kubernetes
-  - cluster
-  - hardware
-  - gpu
+  - coral
+  - movidius
 
 kubeVersion: ">= 1.18.0"
 version: 0.1.0
