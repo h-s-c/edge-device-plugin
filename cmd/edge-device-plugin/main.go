@@ -50,8 +50,16 @@ func FindDevices() []string {
 func CheckDeviceHealth(device string) string {
 	// Check M.2/mPCIe TPU temperature
 	if strings.Contains(device, "usb") == false {
-		temp_b, _ := os.ReadFile("/sys/class/apex/" + filepath.Base(device) + "/temp")
-		trip_point0_temp_b, _ := os.ReadFile("/sys/class/apex/" + filepath.Base(device) + "/trip_point0_temp")
+		path := "/sys/class/apex/" + filepath.Base(device)
+		log.Println(path)
+
+		temp_b, _ := os.ReadFile(path + "/temp")
+		trip_point0_temp_b, _ := os.ReadFile(path + "/trip_point0_temp")
+
+		log.Println(temp_b)
+		log.Println(trip_point0_temp_b)
+		log.Println(string(temp_b))
+		log.Println(string(trip_point0_temp_b))
 
 		temp, _ := strconv.ParseInt(string(temp_b), 10, 64)
 		trip_point0_temp, _ := strconv.ParseInt(string(trip_point0_temp_b), 10, 64)
