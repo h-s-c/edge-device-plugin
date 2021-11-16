@@ -21,6 +21,7 @@ func (dp *VCDevicePlugin) Start() error {
 func (dp *VCDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePlugin_ListAndWatchServer) error {
 	devs := []*pluginapi.Device{}
 	if _, err := os.Stat("/sys/class/vchiq"); err == nil || os.IsExist(err) {
+		log.Println("/sys/class/vchiq found")
 		path := "/dev/vchiq"
 		dev := &pluginapi.Device{
 			ID:     path,
