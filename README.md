@@ -5,7 +5,7 @@
 - Intel Movidius Myriad X VPU (Neural Compute Stick 2\*)
 - Broadcom VideoCore (Raspberry Pi 3/4\*\*)
 
-\*only one USB accelerator per host supported
+\*only one USB accelerator per host supported\
 \*\*hardware accelerated video encoding/decoding via /dev/vchiq
 
 ### Send me some hardware
