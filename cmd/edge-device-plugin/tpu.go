@@ -54,16 +54,14 @@ func CheckTPUHealth(device string) string {
 		trip_point0_temp_b, _ := os.ReadFile(path + "/trip_point0_temp")
 
 		var temp int
-		_, err := fmt.Sscan(string(temp_b), &temp)
-		if err != nil {
+		if _, err := fmt.Sscan(string(temp_b), &temp); err != nil {
 			log.Println(err)
 			return pluginapi.Unhealthy
 		}
 
 		var trip_point0_temp int
-		_, err2 := fmt.Sscan(string(trip_point0_temp_b), &trip_point0_temp)
-		if err2 != nil {
-			log.Println(err2)
+		if _, err := fmt.Sscan(string(trip_point0_temp_b), &trip_point0_temp); err != nil {
+			log.Println(err)
 			return pluginapi.Unhealthy
 		}
 
