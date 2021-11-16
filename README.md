@@ -6,7 +6,7 @@
 
 \* only one NCS2 per host supported
 
-### Send me some hardware
+### Pull request or hardware welcome
 - Intel Movidius VPU (M.2, mPCIe)
 - Kneron KL520 (M.2, mPCIe)
 
@@ -19,7 +19,14 @@ kubectl create -f edge-device-plugin-daemonset.yaml
 ```yaml
 resources: 
   requests:
-    coral.ai/tpu: 1 # requesting 1 TPUs
+    coral.ai/tpu: 1 # requesting 1 TPU
   limits:
-    coral.ai/tpu: 1 # requesting 1 TPUs
+    coral.ai/tpu: 1 # requesting 1 TPU
+```
+```yaml
+resources: 
+  requests:
+    intel.com/vpu: 1 # requesting 1 VPU
+  limits:
+    intel.com/vpu: 1 # requesting 1 VPU
 ```
