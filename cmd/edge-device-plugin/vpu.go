@@ -18,12 +18,14 @@ type VPUDevicePlugin struct {
 }
 
 func (dp *VPUDevicePlugin) Start() error {
+	log.Println("VPU Start")
 	dp.stop = make(chan bool)
 	dp.stop <- false
 	return nil
 }
 
 func (dp *VPUDevicePlugin) Stop() error {
+	log.Println("VPU Stop")
 	dp.stop <- true
 	return nil
 }
@@ -48,6 +50,7 @@ func FindVPUs() []string {
 
 func (dp *VPUDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePlugin_ListAndWatchServer) error {
 	for {
+		log.Println("VPU ListAndWatch")
 		if <-dp.stop {
 			break
 		}
@@ -63,7 +66,6 @@ func (dp *VPUDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePl
 		s.Send(&pluginapi.ListAndWatchResponse{Devices: devs})
 
 		time.Sleep(5 * time.Second)
-		log.Println("Loop 2")
 	}
 	return nil
 }
