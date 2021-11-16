@@ -1,10 +1,10 @@
 # Kubernetes device plugin for low power edge computing accelerators
 
 ### Supported devices
-- Coral Edge TPU (USB, M.2, mPCIe)
-- Intel Movidius VPU (Neural Compute Stick 2 \*)
+- Coral Edge TPU (USB\*, M.2, mPCIe)
+- Intel Movidius VPU (Neural Compute Stick 2\*)
 
-\* only one NCS2 per host supported
+\*only one USB accelerator per host supported
 
 ### Pull request or hardware welcome
 - Intel Movidius VPU (M.2, mPCIe)

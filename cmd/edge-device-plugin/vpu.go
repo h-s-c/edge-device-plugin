@@ -30,8 +30,8 @@ func FindVPUs() []string {
 		if strings.Contains(string(vendorid), "03e7") {
 			productid, _ := os.ReadFile(filepath.Dir(path) + "/idProduct")
 			if strings.Contains(string(productid), "2485") || strings.Contains(string(productid), "f63b") {
-				// Only one NCS2 per host supported
-				devices = append(devices, "ncs2")
+				// Only one per host supported
+				devices = append(devices, "/dev/bus/usb")
 				break
 			}
 		}
@@ -62,15 +62,13 @@ func (dp *VPUDevicePlugin) Allocate(ctx context.Context, r *pluginapi.AllocateRe
 	for _, req := range r.ContainerRequests {
 		response := pluginapi.ContainerAllocateResponse{}
 		for _, id := range req.DevicesIDs {
-			if id == "ncs2" {
-				log.Println("Allocating device: ", id)
-				dev := &pluginapi.DeviceSpec{
-					HostPath:      "/dev/bus/usb",
-					ContainerPath: "/dev/bus/usb",
-					Permissions:   "rw",
-				}
-				response.Devices = append(response.Devices, dev)
+			log.Println("Allocating device: ", id)
+			dev := &pluginapi.DeviceSpec{
+				HostPath:      id,
+				ContainerPath: id,
+				Permissions:   "rw",
 			}
+			response.Devices = append(response.Devices, dev)
 		}
 		responses.ContainerResponses = append(responses.ContainerResponses, &response)
 	}

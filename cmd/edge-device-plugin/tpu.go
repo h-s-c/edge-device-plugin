@@ -37,9 +37,9 @@ func FindTPUs() []string {
 		if strings.Contains(string(vendorid), "18d1") || strings.Contains(string(vendorid), "1a6e") {
 			productid, _ := os.ReadFile(filepath.Dir(path) + "/idProduct")
 			if strings.Contains(string(productid), "9302") || strings.Contains(string(productid), "089a") {
-				busnum, _ := os.ReadFile(filepath.Dir(path) + "/busnum")
-				devnum, _ := os.ReadFile(filepath.Dir(path) + "/devnum")
-				devices = append(devices, "/dev/bus/usb/"+string(busnum)+"/"+string(devnum))
+				// Only one per host supported
+				devices = append(devices, "/dev/bus/usb")
+				break
 			}
 		}
 	}
