@@ -78,8 +78,6 @@ func CheckTPUHealth(device string) string {
 
 func (dp *TPUDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePlugin_ListAndWatchServer) error {
 	for {
-		log.Println("TPU ListAndWatch")
-
 		devs := []*pluginapi.Device{}
 		for _, path := range FindTPUs() {
 			dev := &pluginapi.Device{

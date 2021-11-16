@@ -42,8 +42,6 @@ func FindVPUs() []string {
 
 func (dp *VPUDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePlugin_ListAndWatchServer) error {
 	for {
-		log.Println("VPU ListAndWatch")
-
 		devs := []*pluginapi.Device{}
 		for _, id := range FindTPUs() {
 			dev := &pluginapi.Device{
