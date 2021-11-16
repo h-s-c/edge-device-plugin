@@ -8,8 +8,6 @@ import (
 	"github.com/kubevirt/device-plugin-manager/pkg/dpm"
 )
 
-var finished chan bool
-
 func main() {
 	flag.Parse()
 

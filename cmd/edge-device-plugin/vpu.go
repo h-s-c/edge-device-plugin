@@ -65,7 +65,6 @@ func (dp *VPUDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePl
 		time.Sleep(5 * time.Second)
 		log.Println("Loop 2")
 	}
-	finished <- true
 	return nil
 }
 

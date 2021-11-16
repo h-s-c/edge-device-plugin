@@ -102,7 +102,6 @@ func (dp *TPUDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePl
 		time.Sleep(5 * time.Second)
 		log.Println("Loop 1")
 	}
-	finished <- true
 	return nil
 }
 
