@@ -1,0 +1,26 @@
+namespace: kube-system
+
+updateStrategy:
+  type: RollingUpdate
+
+tolerations:
+  - key: CriticalAddonsOnly
+    operator: Exists
+  - key: coral.ai/tpu
+    operator: Exists
+    effect: NoSchedule
+  - key: intel.com/vpu
+    operator: Exists
+    effect: NoSchedule
+
+imagePullSecrets: []
+image:
+  repository: ghcr.io/h-s-c/edge-device-plugin
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+    - ALL
