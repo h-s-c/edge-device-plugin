@@ -9,10 +9,10 @@ sources:
 maintainers:
   - name: Kevin Schmidt
 keywords:
-  - kubernetes
-  - coral
-  - movidius
+  - coral edge tpu
+  - movidius myriad x vpu
+  - raspberry pi
 
 kubeVersion: ">= 1.18.0"
-version: 0.1.6
+version: 0.2.0
 appVersion: "1.18.0"

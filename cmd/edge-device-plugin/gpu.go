@@ -10,15 +10,15 @@ import (
 	pluginapi "k8s.io/kubelet/pkg/apis/deviceplugin/v1beta1"
 )
 
-type VCDevicePlugin struct {
+type GPUDevicePlugin struct {
 	name string
 }
 
-func (dp *VCDevicePlugin) Start() error {
+func (dp *GPUDevicePlugin) Start() error {
 	return nil
 }
 
-func (dp *VCDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePlugin_ListAndWatchServer) error {
+func (dp *GPUDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePlugin_ListAndWatchServer) error {
 	devs := []*pluginapi.Device{}
 	if _, err := os.Stat("/sys/class/vchiq"); err == nil || os.IsExist(err) {
 		path := "/dev/vchiq"
@@ -37,7 +37,7 @@ func (dp *VCDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePlu
 	return nil
 }
 
-func (dp *VCDevicePlugin) Allocate(ctx context.Context, r *pluginapi.AllocateRequest) (*pluginapi.AllocateResponse, error) {
+func (dp *GPUDevicePlugin) Allocate(ctx context.Context, r *pluginapi.AllocateRequest) (*pluginapi.AllocateResponse, error) {
 	responses := pluginapi.AllocateResponse{}
 	for _, req := range r.ContainerRequests {
 		response := pluginapi.ContainerAllocateResponse{}
@@ -56,33 +56,33 @@ func (dp *VCDevicePlugin) Allocate(ctx context.Context, r *pluginapi.AllocateReq
 	return &responses, nil
 }
 
-func (VCDevicePlugin) GetDevicePluginOptions(context.Context, *pluginapi.Empty) (*pluginapi.DevicePluginOptions, error) {
+func (GPUDevicePlugin) GetDevicePluginOptions(context.Context, *pluginapi.Empty) (*pluginapi.DevicePluginOptions, error) {
 	return &pluginapi.DevicePluginOptions{PreStartRequired: false, GetPreferredAllocationAvailable: false}, nil
 }
 
-func (VCDevicePlugin) PreStartContainer(context.Context, *pluginapi.PreStartContainerRequest) (*pluginapi.PreStartContainerResponse, error) {
+func (GPUDevicePlugin) PreStartContainer(context.Context, *pluginapi.PreStartContainerRequest) (*pluginapi.PreStartContainerResponse, error) {
 	return nil, nil
 }
 
-func (dp *VCDevicePlugin) GetPreferredAllocation(ctx context.Context, r *pluginapi.PreferredAllocationRequest) (*pluginapi.PreferredAllocationResponse, error) {
+func (dp *GPUDevicePlugin) GetPreferredAllocation(ctx context.Context, r *pluginapi.PreferredAllocationRequest) (*pluginapi.PreferredAllocationResponse, error) {
 	return nil, nil
 }
 
-type VCLister struct {
+type GPULister struct {
 }
 
-func (l VCLister) GetResourceNamespace() string {
+func (l GPULister) GetResourceNamespace() string {
 	return "broadcom.com"
 }
 
-func (l VCLister) Discover(pluginListCh chan dpm.PluginNameList) {
+func (l GPULister) Discover(pluginListCh chan dpm.PluginNameList) {
 	plugins := make(dpm.PluginNameList, 0)
-	plugins = append(plugins, "vc")
+	plugins = append(plugins, "gpu")
 	pluginListCh <- plugins
 }
 
-func (l VCLister) NewPlugin(name string) dpm.PluginInterface {
-	return &VCDevicePlugin{
+func (l GPULister) NewPlugin(name string) dpm.PluginInterface {
+	return &GPUDevicePlugin{
 		name: name,
 	}
 }

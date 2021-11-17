@@ -12,6 +12,9 @@ tolerations:
   - key: intel.com/vpu
     operator: Exists
     effect: NoSchedule
+  - key: broadcom.com/gpu
+    operator: Exists
+    effect: NoSchedule
 
 imagePullSecrets: []
 image:

@@ -29,8 +29,8 @@ func main() {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		vcmanager := dpm.NewManager(VCLister{})
-		vcmanager.Run()
+		gpumanager := dpm.NewManager(GPULister{})
+		gpumanager.Run()
 	}()
 	wg.Wait()
 }
