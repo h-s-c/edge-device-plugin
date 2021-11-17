@@ -9,6 +9,6 @@ COPY . .
 RUN go install -ldflags="-s -w" cmd/edge-device-plugin/*.go
 
 FROM debian:bullseye-slim
-COPY --from=build /go/bin/main /bin/edge-device-plugin
+COPY --from=build /go/bin/edge-device-plugin /bin/edge-device-plugin
 
 CMD ["/bin/edge-device-plugin"]
