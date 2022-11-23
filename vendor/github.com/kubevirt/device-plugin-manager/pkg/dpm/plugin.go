@@ -79,13 +79,12 @@ func (dpi *devicePlugin) StartServer() error {
 		return err
 	}
 
-	dpi.Running = true
-
 	err = dpi.register()
 	if err != nil {
 		dpi.StopServer()
 		return err
 	}
+	dpi.Running = true
 
 	return nil
 }
@@ -139,10 +138,18 @@ func (dpi *devicePlugin) register() error {
 	}
 	client := pluginapi.NewRegistrationClient(conn)
 	glog.Infof("%s: Registration for endpoint %s", dpi.Name, path.Base(dpi.Socket))
+
+	options, err := dpi.DevicePluginImpl.GetDevicePluginOptions(context.Background(), &pluginapi.Empty{})
+	if err != nil {
+		glog.Errorf("%s: Failed to get device plugin options %s", dpi.Name, err)
+		return err
+	}
+
 	reqt := &pluginapi.RegisterRequest{
 		Version:      pluginapi.Version,
 		Endpoint:     path.Base(dpi.Socket),
 		ResourceName: dpi.ResourceName,
+		Options:      options,
 	}
 
 	_, err = client.Register(context.Background(), reqt)

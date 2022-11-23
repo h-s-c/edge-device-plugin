@@ -1,5 +1,5 @@
 
-FROM golang:1.17-bullseye as build
+FROM golang:1.19-bullseye as build
 
 WORKDIR /go/src/edge-device-plugin
 COPY go.mod go.sum ./
