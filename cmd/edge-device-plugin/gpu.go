@@ -22,7 +22,7 @@ func (dp *GPUDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePl
 	devs := []*pluginapi.Device{}
 	if _, err := os.Stat("/sys/class/vc-mem"); err == nil || os.IsExist(err) {
 		dev := &pluginapi.Device{
-			ID:     "broadcom.com/gpu",
+			ID:     "/dev/vchiq /dev/vcsm-cma",
 			Health: pluginapi.Healthy,
 		}
 		devs = append(devs, dev)
@@ -41,7 +41,7 @@ func (dp *GPUDevicePlugin) Allocate(ctx context.Context, r *pluginapi.AllocateRe
 	for _, req := range r.ContainerRequests {
 		response := pluginapi.ContainerAllocateResponse{}
 		for _, id := range req.DevicesIDs {
-			log.Println("Allocating device: ", id)
+			log.Println("Allocating devices: ", id)
 			dev1 := &pluginapi.DeviceSpec{
 				HostPath:      "/dev/vchiq",
 				ContainerPath: "/dev/vchiq",
