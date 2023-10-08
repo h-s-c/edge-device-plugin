@@ -14,5 +14,5 @@ keywords:
   - raspberry pi
 
 kubeVersion: ">= 1.18.0"
-version: 0.2.8
+version: 0.3.0
 appVersion: "1.18.0"

@@ -20,9 +20,10 @@ func (dp *GPUDevicePlugin) Start() error {
 
 func (dp *GPUDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePlugin_ListAndWatchServer) error {
 	devs := []*pluginapi.Device{}
+	// Detect Raspberry Pi
 	if _, err := os.Stat("/sys/class/vc-mem"); err == nil || os.IsExist(err) {
 		dev := &pluginapi.Device{
-			ID:     "/dev/vchiq /dev/vcsm-cma",
+			ID:     "/dev/vchiq /dev/vcsm-cma /dev/video10 /dev/video11 /dev/video12",
 			Health: pluginapi.Healthy,
 		}
 		devs = append(devs, dev)
@@ -42,6 +43,7 @@ func (dp *GPUDevicePlugin) Allocate(ctx context.Context, r *pluginapi.AllocateRe
 		response := pluginapi.ContainerAllocateResponse{}
 		for _, id := range req.DevicesIDs {
 			log.Println("Allocating devices: ", id)
+			// OpenMAX Video
 			dev1 := &pluginapi.DeviceSpec{
 				HostPath:      "/dev/vchiq",
 				ContainerPath: "/dev/vchiq",
@@ -54,6 +56,25 @@ func (dp *GPUDevicePlugin) Allocate(ctx context.Context, r *pluginapi.AllocateRe
 				Permissions:   "rw",
 			}
 			response.Devices = append(response.Devices, dev2)
+			// V4L2 Video
+			dev3 := &pluginapi.DeviceSpec{
+				HostPath:      "/dev/video10",
+				ContainerPath: "/dev/video10",
+				Permissions:   "rw",
+			}
+			response.Devices = append(response.Devices, dev3)
+			dev4 := &pluginapi.DeviceSpec{
+				HostPath:      "/dev/video11",
+				ContainerPath: "/dev/video11",
+				Permissions:   "rw",
+			}
+			response.Devices = append(response.Devices, dev4)
+			dev5 := &pluginapi.DeviceSpec{
+				HostPath:      "/dev/video12",
+				ContainerPath: "/dev/video12",
+				Permissions:   "rw",
+			}
+			response.Devices = append(response.Devices, dev5)
 		}
 		responses.ContainerResponses = append(responses.ContainerResponses, &response)
 	}
