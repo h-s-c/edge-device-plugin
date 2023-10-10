@@ -3,6 +3,26 @@ entries:
   edge-device-plugin:
   - apiVersion: v2
     appVersion: 1.18.0
+    created: "2023-10-10T04:41:11.257964938Z"
+    description: A Helm chart for deploying Kubernetes Edge Device Plugin
+    digest: 1f142c8dee7a33d9a01c0a1d289e14c55c862ba8cb04efb4a44eca02ec229efa
+    home: https://github.com/h-s-c/edge-device-plugin
+    keywords:
+    - coral edge tpu
+    - movidius myriad x vpu
+    - raspberry pi
+    kubeVersion: '>= 1.18.0'
+    maintainers:
+    - name: Kevin Schmidt
+    name: edge-device-plugin
+    sources:
+    - https://github.com/h-s-c/edge-device-plugin
+    type: application
+    urls:
+    - https://github.com/h-s-c/edge-device-plugin/releases/download/edge-device-plugin-0.3.3/edge-device-plugin-0.3.3.tgz
+    version: 0.3.3
+  - apiVersion: v2
+    appVersion: 1.18.0
     created: "2023-10-07T02:01:11.817306379Z"
     description: A Helm chart for deploying Kubernetes Edge Device Plugin
     digest: e4132d5ed9883ab0507049f366e12f7e8e01658178402050a6b5466fe70f0d65
@@ -302,4 +322,4 @@ entries:
     urls:
     - https://github.com/h-s-c/edge-device-plugin/releases/download/edge-device-plugin-0.1.0/edge-device-plugin-0.1.0.tgz
     version: 0.1.0
-generated: "2023-10-07T02:01:11.817514579Z"
+generated: "2023-10-10T04:41:11.258061636Z"
