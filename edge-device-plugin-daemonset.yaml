@@ -17,29 +17,39 @@ spec:
         name: edge-device-plugin-ds
     spec:
       tolerations:
-      - key: CriticalAddonsOnly
-        operator: Exists
-      - key: coral.ai/tpu
-        operator: Exists
-        effect: NoSchedule
-      - key: intel.com/vpu
-        operator: Exists
-        effect: NoSchedule
-      - key: broadcom.com/gpu
-        operator: Exists
-        effect: NoSchedule
+        - key: CriticalAddonsOnly
+          operator: Exists
+        - key: coral.ai/tpu
+          operator: Exists
+          effect: NoSchedule
+        - key: intel.com/vpu
+          operator: Exists
+          effect: NoSchedule
+        - key: broadcom.com/gpu
+          operator: Exists
+          effect: NoSchedule
       priorityClassName: "system-node-critical"
       containers:
-      - image:   ghcr.io/h-s-c/edge-device-plugin:latest
-        name: edge-device-plugin
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop: ["ALL"]
-        volumeMounts:
-          - name: device-plugin
-            mountPath: /var/lib/kubelet/device-plugins
+        - image:   ghcr.io/h-s-c/edge-device-plugin:latest
+          name: edge-device-plugin
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: device-plugin
+              mountPath: /var/lib/kubelet/device-plugins
+            - name: devfs
+              mountPath: /dev/dri
+            - name: sysfs
+              mountPath: /sys/class/drm
       volumes:
         - name: device-plugin
           hostPath:
             path: /var/lib/kubelet/device-plugins
+        - name: devfs
+          hostPath:
+            path: /dev/dri
+        - name: sysfs
+          hostPath:
+            path: /sys/class/drm

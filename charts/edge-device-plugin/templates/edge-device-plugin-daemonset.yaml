@@ -32,15 +32,20 @@ spec:
           image: {{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          volumeMounts:
-            - name: dp
-              mountPath: /var/lib/kubelet/device-plugins
-            - name: sys
-              mountPath: /sys
+        volumeMounts:
+          - name: device-plugin
+            mountPath: /var/lib/kubelet/device-plugins
+          - name: devfs
+            mountPath: /dev/dri
+          - name: sysfs
+            mountPath: /sys/class/drm
       volumes:
-        - name: dp
+        - name: device-plugin
           hostPath:
             path: /var/lib/kubelet/device-plugins
-        - name: sys
+        - name: devfs
           hostPath:
-            path: /sys
+            path: /dev/dri
+        - name: sysfs
+          hostPath:
+            path: /sys/class/drm
