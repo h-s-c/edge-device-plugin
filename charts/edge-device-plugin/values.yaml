@@ -20,7 +20,8 @@ imagePullSecrets: []
 image:
   repository: ghcr.io/h-s-c/edge-device-plugin
   pullPolicy: IfNotPresent
-  tag: "latest"
+  # @default -- chart.appVersion
+  tag:
 
 securityContext:
   allowPrivilegeEscalation: false
