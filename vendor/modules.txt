@@ -130,6 +130,6 @@ google.golang.org/protobuf/types/descriptorpb
 google.golang.org/protobuf/types/known/anypb
 google.golang.org/protobuf/types/known/durationpb
 google.golang.org/protobuf/types/known/timestamppb
-# k8s.io/kubelet v0.29.1
+# k8s.io/kubelet v0.29.2
 ## explicit; go 1.21
 k8s.io/kubelet/pkg/apis/deviceplugin/v1beta1
