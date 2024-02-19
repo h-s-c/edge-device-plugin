@@ -21,7 +21,7 @@ image:
   repository: ghcr.io/h-s-c/edge-device-plugin
   pullPolicy: IfNotPresent
   # @default -- chart.appVersion
-  tag:
+  tag: latest
 
 securityContext:
   allowPrivilegeEscalation: false
