@@ -19,7 +19,7 @@ tolerations:
 imagePullSecrets: []
 image:
   repository: ghcr.io/h-s-c/edge-device-plugin
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   # @default -- chart.appVersion
   tag: latest
 
