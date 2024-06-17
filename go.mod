@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/kubevirt/device-plugin-manager v1.19.5
 	golang.org/x/net v0.26.0
-	k8s.io/kubelet v0.30.1
+	k8s.io/kubelet v0.30.2
 )
 
 require (
