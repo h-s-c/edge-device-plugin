@@ -1,5 +1,5 @@
 
-FROM golang:1.22-bookworm as build
+FROM golang:1.23-bookworm as build
 
 WORKDIR /go/src/edge-device-plugin
 COPY go.mod go.sum ./
