@@ -6,15 +6,6 @@ updateStrategy:
 tolerations:
   - key: CriticalAddonsOnly
     operator: Exists
-  - key: coral.ai/tpu
-    operator: Exists
-    effect: NoSchedule
-  - key: intel.com/vpu
-    operator: Exists
-    effect: NoSchedule
-  - key: broadcom.com/gpu
-    operator: Exists
-    effect: NoSchedule
 
 imagePullSecrets: []
 image:

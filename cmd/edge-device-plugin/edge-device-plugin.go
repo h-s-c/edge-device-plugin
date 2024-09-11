@@ -17,20 +17,20 @@ func main() {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		tpumanager := dpm.NewManager(TPULister{})
-		tpumanager.Run()
+		coralmanager := dpm.NewManager(CoralLister{})
+		coralmanager.Run()
 	}()
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		vpumanager := dpm.NewManager(VPULister{})
-		vpumanager.Run()
+		intelmanager := dpm.NewManager(IntelLister{})
+		intelmanager.Run()
 	}()
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		gpumanager := dpm.NewManager(GPULister{})
-		gpumanager.Run()
+		raspberrypimanager := dpm.NewManager(RasberrypiLister{})
+		raspberrypimanager.Run()
 	}()
 	wg.Wait()
 }

@@ -10,20 +10,20 @@ import (
 	pluginapi "k8s.io/kubelet/pkg/apis/deviceplugin/v1beta1"
 )
 
-type GPUDevicePlugin struct {
+type RasberrypiDevicePlugin struct {
 	name string
 }
 
-func (dp *GPUDevicePlugin) Start() error {
+func (dp *RasberrypiDevicePlugin) Start() error {
 	return nil
 }
 
-func (dp *GPUDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePlugin_ListAndWatchServer) error {
+func (dp *RasberrypiDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePlugin_ListAndWatchServer) error {
 	devs := []*pluginapi.Device{}
 	// Detect Raspberry Pi
 	if _, err := os.Stat("/sys/class/vc-mem"); err == nil || os.IsExist(err) {
 		dev := &pluginapi.Device{
-			ID:     "/dev/vchiq /dev/vcsm-cma /dev/video10 /dev/video11 /dev/video12",
+			ID:     "/dev/vchiq /dev/vcsm-cma /dev/video10 /dev/video11 /dev/video12 /dev/dri",
 			Health: pluginapi.Healthy,
 		}
 		devs = append(devs, dev)
@@ -37,12 +37,13 @@ func (dp *GPUDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePl
 	return nil
 }
 
-func (dp *GPUDevicePlugin) Allocate(ctx context.Context, r *pluginapi.AllocateRequest) (*pluginapi.AllocateResponse, error) {
+func (dp *RasberrypiDevicePlugin) Allocate(ctx context.Context, r *pluginapi.AllocateRequest) (*pluginapi.AllocateResponse, error) {
 	responses := pluginapi.AllocateResponse{}
 	for _, req := range r.ContainerRequests {
 		response := pluginapi.ContainerAllocateResponse{}
 		for _, id := range req.DevicesIDs {
 			log.Println("Allocating devices: ", id)
+
 			// OpenMAX Video
 			dev1 := &pluginapi.DeviceSpec{
 				HostPath:      "/dev/vchiq",
@@ -75,6 +76,14 @@ func (dp *GPUDevicePlugin) Allocate(ctx context.Context, r *pluginapi.AllocateRe
 				Permissions:   "rw",
 			}
 			response.Devices = append(response.Devices, dev5)
+			// GPU
+			dev6 := &pluginapi.DeviceSpec{
+				HostPath:      "/dev/dri",
+				ContainerPath: "/dev/dri",
+				Permissions:   "rw",
+			}
+			response.Devices = append(response.Devices, dev6)
+
 		}
 		responses.ContainerResponses = append(responses.ContainerResponses, &response)
 	}
@@ -82,33 +91,33 @@ func (dp *GPUDevicePlugin) Allocate(ctx context.Context, r *pluginapi.AllocateRe
 	return &responses, nil
 }
 
-func (GPUDevicePlugin) GetDevicePluginOptions(context.Context, *pluginapi.Empty) (*pluginapi.DevicePluginOptions, error) {
+func (RasberrypiDevicePlugin) GetDevicePluginOptions(context.Context, *pluginapi.Empty) (*pluginapi.DevicePluginOptions, error) {
 	return &pluginapi.DevicePluginOptions{PreStartRequired: false, GetPreferredAllocationAvailable: false}, nil
 }
 
-func (GPUDevicePlugin) PreStartContainer(context.Context, *pluginapi.PreStartContainerRequest) (*pluginapi.PreStartContainerResponse, error) {
+func (RasberrypiDevicePlugin) PreStartContainer(context.Context, *pluginapi.PreStartContainerRequest) (*pluginapi.PreStartContainerResponse, error) {
 	return nil, nil
 }
 
-func (dp *GPUDevicePlugin) GetPreferredAllocation(ctx context.Context, r *pluginapi.PreferredAllocationRequest) (*pluginapi.PreferredAllocationResponse, error) {
+func (dp *RasberrypiDevicePlugin) GetPreferredAllocation(ctx context.Context, r *pluginapi.PreferredAllocationRequest) (*pluginapi.PreferredAllocationResponse, error) {
 	return nil, nil
 }
 
-type GPULister struct {
+type RasberrypiLister struct {
 }
 
-func (l GPULister) GetResourceNamespace() string {
-	return "broadcom.com"
+func (l RasberrypiLister) GetResourceNamespace() string {
+	return "raspberrypi.com"
 }
 
-func (l GPULister) Discover(pluginListCh chan dpm.PluginNameList) {
+func (l RasberrypiLister) Discover(pluginListCh chan dpm.PluginNameList) {
 	plugins := make(dpm.PluginNameList, 0)
 	plugins = append(plugins, "gpu")
 	pluginListCh <- plugins
 }
 
-func (l GPULister) NewPlugin(name string) dpm.PluginInterface {
-	return &GPUDevicePlugin{
+func (l RasberrypiLister) NewPlugin(name string) dpm.PluginInterface {
+	return &RasberrypiDevicePlugin{
 		name: name,
 	}
 }

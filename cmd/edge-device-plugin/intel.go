@@ -12,11 +12,11 @@ import (
 	pluginapi "k8s.io/kubelet/pkg/apis/deviceplugin/v1beta1"
 )
 
-type VPUDevicePlugin struct {
+type IntelDevicePlugin struct {
 	name string
 }
 
-func (dp *VPUDevicePlugin) Start() error {
+func (dp *IntelDevicePlugin) Start() error {
 	return nil
 }
 
@@ -39,7 +39,7 @@ func FindVPUs() []string {
 	return devices
 }
 
-func (dp *VPUDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePlugin_ListAndWatchServer) error {
+func (dp *IntelDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePlugin_ListAndWatchServer) error {
 	for {
 		devs := []*pluginapi.Device{}
 		for _, id := range FindVPUs() {
@@ -56,7 +56,7 @@ func (dp *VPUDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePl
 	return nil
 }
 
-func (dp *VPUDevicePlugin) Allocate(ctx context.Context, r *pluginapi.AllocateRequest) (*pluginapi.AllocateResponse, error) {
+func (dp *IntelDevicePlugin) Allocate(ctx context.Context, r *pluginapi.AllocateRequest) (*pluginapi.AllocateResponse, error) {
 	responses := pluginapi.AllocateResponse{}
 	for _, req := range r.ContainerRequests {
 		response := pluginapi.ContainerAllocateResponse{}
@@ -75,33 +75,33 @@ func (dp *VPUDevicePlugin) Allocate(ctx context.Context, r *pluginapi.AllocateRe
 	return &responses, nil
 }
 
-func (VPUDevicePlugin) GetDevicePluginOptions(context.Context, *pluginapi.Empty) (*pluginapi.DevicePluginOptions, error) {
+func (IntelDevicePlugin) GetDevicePluginOptions(context.Context, *pluginapi.Empty) (*pluginapi.DevicePluginOptions, error) {
 	return &pluginapi.DevicePluginOptions{PreStartRequired: false, GetPreferredAllocationAvailable: false}, nil
 }
 
-func (VPUDevicePlugin) PreStartContainer(context.Context, *pluginapi.PreStartContainerRequest) (*pluginapi.PreStartContainerResponse, error) {
+func (IntelDevicePlugin) PreStartContainer(context.Context, *pluginapi.PreStartContainerRequest) (*pluginapi.PreStartContainerResponse, error) {
 	return nil, nil
 }
 
-func (dp *VPUDevicePlugin) GetPreferredAllocation(ctx context.Context, r *pluginapi.PreferredAllocationRequest) (*pluginapi.PreferredAllocationResponse, error) {
+func (dp *IntelDevicePlugin) GetPreferredAllocation(ctx context.Context, r *pluginapi.PreferredAllocationRequest) (*pluginapi.PreferredAllocationResponse, error) {
 	return nil, nil
 }
 
-type VPULister struct {
+type IntelLister struct {
 }
 
-func (l VPULister) GetResourceNamespace() string {
+func (l IntelLister) GetResourceNamespace() string {
 	return "intel.com"
 }
 
-func (l VPULister) Discover(pluginListCh chan dpm.PluginNameList) {
+func (l IntelLister) Discover(pluginListCh chan dpm.PluginNameList) {
 	plugins := make(dpm.PluginNameList, 0)
 	plugins = append(plugins, "vpu")
 	pluginListCh <- plugins
 }
 
-func (l VPULister) NewPlugin(name string) dpm.PluginInterface {
-	return &VPUDevicePlugin{
+func (l IntelLister) NewPlugin(name string) dpm.PluginInterface {
+	return &IntelDevicePlugin{
 		name: name,
 	}
 }

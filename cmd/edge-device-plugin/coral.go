@@ -13,11 +13,11 @@ import (
 	pluginapi "k8s.io/kubelet/pkg/apis/deviceplugin/v1beta1"
 )
 
-type TPUDevicePlugin struct {
+type CoralDevicePlugin struct {
 	name string
 }
 
-func (dp *TPUDevicePlugin) Start() error {
+func (dp *CoralDevicePlugin) Start() error {
 	return nil
 }
 
@@ -73,7 +73,7 @@ func CheckTPUHealth(device string) string {
 	return pluginapi.Healthy
 }
 
-func (dp *TPUDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePlugin_ListAndWatchServer) error {
+func (dp *CoralDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePlugin_ListAndWatchServer) error {
 	for {
 		devs := []*pluginapi.Device{}
 		for _, path := range FindTPUs() {
@@ -90,7 +90,7 @@ func (dp *TPUDevicePlugin) ListAndWatch(e *pluginapi.Empty, s pluginapi.DevicePl
 	return nil
 }
 
-func (dp *TPUDevicePlugin) Allocate(ctx context.Context, r *pluginapi.AllocateRequest) (*pluginapi.AllocateResponse, error) {
+func (dp *CoralDevicePlugin) Allocate(ctx context.Context, r *pluginapi.AllocateRequest) (*pluginapi.AllocateResponse, error) {
 	responses := pluginapi.AllocateResponse{}
 	for _, req := range r.ContainerRequests {
 		response := pluginapi.ContainerAllocateResponse{}
@@ -109,33 +109,33 @@ func (dp *TPUDevicePlugin) Allocate(ctx context.Context, r *pluginapi.AllocateRe
 	return &responses, nil
 }
 
-func (TPUDevicePlugin) GetDevicePluginOptions(context.Context, *pluginapi.Empty) (*pluginapi.DevicePluginOptions, error) {
+func (CoralDevicePlugin) GetDevicePluginOptions(context.Context, *pluginapi.Empty) (*pluginapi.DevicePluginOptions, error) {
 	return &pluginapi.DevicePluginOptions{PreStartRequired: false, GetPreferredAllocationAvailable: false}, nil
 }
 
-func (TPUDevicePlugin) PreStartContainer(context.Context, *pluginapi.PreStartContainerRequest) (*pluginapi.PreStartContainerResponse, error) {
+func (CoralDevicePlugin) PreStartContainer(context.Context, *pluginapi.PreStartContainerRequest) (*pluginapi.PreStartContainerResponse, error) {
 	return nil, nil
 }
 
-func (dp *TPUDevicePlugin) GetPreferredAllocation(ctx context.Context, r *pluginapi.PreferredAllocationRequest) (*pluginapi.PreferredAllocationResponse, error) {
+func (dp *CoralDevicePlugin) GetPreferredAllocation(ctx context.Context, r *pluginapi.PreferredAllocationRequest) (*pluginapi.PreferredAllocationResponse, error) {
 	return nil, nil
 }
 
-type TPULister struct {
+type CoralLister struct {
 }
 
-func (l TPULister) GetResourceNamespace() string {
+func (l CoralLister) GetResourceNamespace() string {
 	return "coral.ai"
 }
 
-func (l TPULister) Discover(pluginListCh chan dpm.PluginNameList) {
+func (l CoralLister) Discover(pluginListCh chan dpm.PluginNameList) {
 	plugins := make(dpm.PluginNameList, 0)
 	plugins = append(plugins, "tpu")
 	pluginListCh <- plugins
 }
 
-func (l TPULister) NewPlugin(name string) dpm.PluginInterface {
-	return &TPUDevicePlugin{
+func (l CoralLister) NewPlugin(name string) dpm.PluginInterface {
+	return &CoralDevicePlugin{
 		name: name,
 	}
 }
