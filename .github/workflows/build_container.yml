@@ -58,4 +58,5 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ steps.meta.outputs.tags }}, ${{ steps.chart.outputs.appVersion }}
+          tags: ${{ steps.meta.outputs.tags }}, ${{ github.repository }}:${{ steps.chart.outputs.appVersion }}
+          labels: ${{ steps.meta.outputs.labels }}
