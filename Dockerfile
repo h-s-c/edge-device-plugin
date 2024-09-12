@@ -1,14 +1,13 @@
-
-FROM golang:1.23-bookworm AS build
+FROM golang:1.23 AS build
 
 WORKDIR /go/src/edge-device-plugin
-COPY go.mod go.sum ./
-RUN go mod download
-
 COPY . .
-RUN go install -ldflags="-s -w" cmd/edge-device-plugin/*.go
 
-FROM debian:bookworm-slim
-COPY --from=build /go/bin/edge-device-plugin /bin/edge-device-plugin
+RUN go mod download
+RUN CGO_ENABLED=0 go build -o /go/bin/edge-device-plugin cmd/edge-device-plugin/*.go
 
-CMD ["/bin/edge-device-plugin"]
+FROM gcr.io/distroless/static
+
+COPY --from=build /go/bin/edge-device-plugin /edge-device-plugin
+
+ENTRYPOINT ["/edge-device-plugin"]
