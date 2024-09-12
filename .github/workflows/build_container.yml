@@ -39,6 +39,12 @@ jobs:
           tags: |
             type=sha 
 
+      - name: Extract helm chart version
+        uses: actions-tools/yaml-outputs@v2
+        id: chart
+        with:
+          file-path: 'charts/edge-device-plugin/Chart.yaml'
+
       - name: Setup container build
         uses: docker/setup-qemu-action@v3
         with:
@@ -52,5 +58,4 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta.outputs.tags }}, ${{ steps.chart.outputs.appVersion }}
