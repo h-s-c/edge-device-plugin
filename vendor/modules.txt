@@ -34,8 +34,8 @@ golang.org/x/text/secure/bidirule
 golang.org/x/text/transform
 golang.org/x/text/unicode/bidi
 golang.org/x/text/unicode/norm
-# google.golang.org/genproto/googleapis/rpc v0.0.0-20240701130421-f6361c86f094
-## explicit; go 1.20
+# google.golang.org/genproto/googleapis/rpc v0.0.0-20240826202546-f6391c0de4c7
+## explicit; go 1.21
 google.golang.org/genproto/googleapis/rpc/status
 # google.golang.org/grpc v1.65.0
 ## explicit; go 1.21
@@ -90,8 +90,8 @@ google.golang.org/grpc/serviceconfig
 google.golang.org/grpc/stats
 google.golang.org/grpc/status
 google.golang.org/grpc/tap
-# google.golang.org/protobuf v1.34.2
-## explicit; go 1.20
+# google.golang.org/protobuf v1.35.1
+## explicit; go 1.21
 google.golang.org/protobuf/encoding/protojson
 google.golang.org/protobuf/encoding/prototext
 google.golang.org/protobuf/encoding/protowire
@@ -124,6 +124,6 @@ google.golang.org/protobuf/runtime/protoimpl
 google.golang.org/protobuf/types/known/anypb
 google.golang.org/protobuf/types/known/durationpb
 google.golang.org/protobuf/types/known/timestamppb
-# k8s.io/kubelet v0.31.3
-## explicit; go 1.22
+# k8s.io/kubelet v0.32.0
+## explicit; go 1.23
 k8s.io/kubelet/pkg/apis/deviceplugin/v1beta1
