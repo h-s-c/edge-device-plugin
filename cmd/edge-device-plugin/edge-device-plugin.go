@@ -32,5 +32,11 @@ func main() {
 		raspberrypimanager := dpm.NewManager(RasberrypiLister{})
 		raspberrypimanager.Run()
 	}()
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		sonoffmanager := dpm.NewManager(SonoffLister{})
+		sonoffmanager.Run()
+	}()
 	wg.Wait()
 }

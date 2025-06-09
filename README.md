@@ -4,6 +4,7 @@
 - Coral Edge TPU (USB\*, M.2, mPCIe)
 - Intel Movidius Myriad X VPU (Neural Compute Stick 2\*)
 - Raspberry Pi 3/4 GPU
+- Sonoff ZBDongle-E 
 
 ## Install DaemonSet
 ### Helm chart
@@ -38,4 +39,11 @@ resources:
     raspberrypi.com/gpu: 1
   limits:
     raspberrypi.com/gpu: 1
+```
+```yaml
+resources: 
+  requests:
+    sonoff.tech/gateway: 1
+  limits:
+    sonoff.tech/gateway: 1
 ```
