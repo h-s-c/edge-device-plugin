@@ -4,7 +4,7 @@ go 1.25.0
 
 require (
 	github.com/kubevirt/device-plugin-manager v1.19.5
-	golang.org/x/net v0.50.0
+	golang.org/x/net v0.51.0
 	k8s.io/kubelet v0.35.1
 )
 
