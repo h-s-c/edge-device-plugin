@@ -46,7 +46,7 @@ jobs:
           file-path: 'charts/edge-device-plugin/Chart.yaml'
 
       - name: Setup container build
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v4
         with:
           image: tonistiigi/binfmt:latest
           platforms: arm64
